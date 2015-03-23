@@ -44,10 +44,10 @@ public class acceleration extends Activity {
 	 */
 	long uiId;
 	
-	int accdelay = 1000,gpsdelay=3000,gyrodelay=1000,magdelay=1000;
+	int accdelay = 1000,gpsdelay=3000,gyrodelay=1000,magdelay=1000,oridelay=1000;
 	String filepath = Environment.getExternalStorageDirectory()+"/Acceleration/output.txt";
 	/**
-	 * (acc代表加速度,gps代表GPS,gyro代表陀螺仪)
+	 * (acc代表加速度,gps代表GPS,gyro代表陀螺仪,ori代表方向传感器)
 	 * 上面的三个delay分别控制三个传感器的速度,然后filepath代表的是保存的文件路径
 	 */
 	
@@ -55,6 +55,7 @@ public class acceleration extends Activity {
 	long nowtimegps=0,lasttimegps=SystemClock.elapsedRealtime();
 	long nowtimegyro=0,lasttimegyro=SystemClock.elapsedRealtime();
 	long nowtimemag=0,lasttimemag=SystemClock.elapsedRealtime();
+	long nowtimeori=0,lasttimeori=SystemClock.elapsedRealtime();
 
 	/**
 	 * 这些是做延迟处理的参数,利用时间戳的差来进行延迟处理
@@ -184,7 +185,7 @@ public class acceleration extends Activity {
 				/**
 				 * 磁场和加速度传感类似,这里是一样的写法
 				 */
-				  nowtimemag=SystemClock.elapsedRealtime();
+				  nowtimeori=SystemClock.elapsedRealtime();
 				  
 				  float x=event.values[0],y=event.values[1],z=event.values[2];
 				  String output = "";String output2 = "";
@@ -192,14 +193,10 @@ public class acceleration extends Activity {
 				  output+="MagY=\t"+String.valueOf(y)+"\r\n";
 				  output+="MagZ=\t"+String.valueOf(z)+"\r\n";
 
-				  if(nowtimemag-lasttimemag>=accdelay)
+				  if(nowtimemag-lasttimemag>=magdelay)
 				  {
 					  lasttimemag=nowtimemag;
 					  	output2+=System.currentTimeMillis()+",mag,"+x+","+y+","+z+"\r\n";
-					  	/**
-					  	 * 格式:时间戳,gyro,x,y,z
-					  	 * 例子:1411137519351,gyro,-0.0019989014,0.0012512207,-0.0011444092
-					  	 */
 					  	appendText(filepath,output2);
 				  }
 				  
@@ -210,6 +207,35 @@ public class acceleration extends Activity {
 			public void onAccuracyChanged(Sensor sensor, int accuracy) {
 			}
 		}, magSensor, SensorManager.SENSOR_DELAY_GAME);
+        
+        Sensor oriSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
+        sensorManager.registerListener(new SensorEventListener() {
+			public void onSensorChanged(SensorEvent event) {
+				/**
+				 * 方向传感器,这里也是一样的写法
+				 */
+				  nowtimemag=SystemClock.elapsedRealtime();
+				  
+				  float x=event.values[0],y=event.values[1],z=event.values[2];
+				  String output = "";String output2 = "";
+				  output+="OriX=\t"+String.valueOf(x)+"\r\n";
+				  output+="OriY=\t"+String.valueOf(y)+"\r\n";
+				  output+="OriZ=\t"+String.valueOf(z)+"\r\n";
+
+				  if(nowtimeori-lasttimeori>=oridelay)
+				  {
+					  lasttimeori=nowtimeori;
+					  	output2+=System.currentTimeMillis()+",ori,"+x+","+y+","+z+"\r\n";
+					  	appendText(filepath,output2);
+				  }
+				  
+				  TextView outpuTextView =(TextView)findViewById(R.id.textview_ori);
+				  outpuTextView.setText(output);
+				  
+			}
+			public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			}
+		}, oriSensor, SensorManager.SENSOR_DELAY_GAME);
         
         
         
@@ -340,10 +366,11 @@ public class acceleration extends Activity {
 	public void openthefile(View v)
 	{
 		Uri uri = Uri.parse("file://"+filepath);  
-		Intent it = new Intent(Intent.ACTION_VIEW,uri);
-//		it.setType("text/html");
-		it.setClassName("com.android.browser", "com.android.browser.BrowserActivity"); 
-		startActivity(it);
+		Intent intent = new Intent();
+		intent.setAction(android.content.Intent.ACTION_VIEW);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intent.setDataAndType(uri, "text/html");
+		startActivity(intent);
 	}
 	
 	public void clear(View v)

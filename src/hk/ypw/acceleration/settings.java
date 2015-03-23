@@ -20,6 +20,7 @@ public class settings extends Activity{
 		EditText gps = (EditText)findViewById(R.id.edit_gps);
 		EditText gyro = (EditText)findViewById(R.id.edit_gyro);
 		EditText mag = (EditText)findViewById(R.id.edit_mag);
+		EditText ori = (EditText)findViewById(R.id.edit_ori);
 		EditText filename = (EditText)findViewById(R.id.edit_filename);
 
 		
@@ -29,11 +30,13 @@ public class settings extends Activity{
 			String gpsString=sp.getString("gps", "3000");
 			String gyroString=sp.getString("gyro", "1000");
 			String magString=sp.getString("mag", "1000");
+			String oriString=sp.getString("ori", "1000");
 			String filenameString=sp.getString("filename", "output.txt");
 			acc.setText(accString);
 			gps.setText(gpsString);
 			gyro.setText(gyroString);
 			mag.setText(magString);
+			ori.setText(oriString);
 			filename.setText(filenameString);
 			
 		}catch(Exception e)
@@ -47,18 +50,21 @@ public class settings extends Activity{
 		EditText gps = (EditText)findViewById(R.id.edit_gps);
 		EditText gyro = (EditText)findViewById(R.id.edit_gyro);
 		EditText mag = (EditText)findViewById(R.id.edit_mag);
+		EditText ori = (EditText)findViewById(R.id.edit_ori);
 		EditText filename = (EditText)findViewById(R.id.edit_filename);
 
 		String accString = acc.getText().toString();
 		String gpsString = gps.getText().toString();
 		String gyroString = gyro.getText().toString();
 		String magString = mag.getText().toString();
+		String oriString = ori.getText().toString();
 		String filenameString = filename.getText().toString();
 		
 		sp.putString("acc",	accString);
 		sp.putString("gps",	gpsString);
 		sp.putString("gyro",gyroString);
 		sp.putString("mag",	magString);
+		sp.putString("ori",	oriString);
 		sp.putString("filename",filenameString);
 		sp.commit();
 		
