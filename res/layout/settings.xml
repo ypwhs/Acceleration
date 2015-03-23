@@ -77,20 +77,6 @@
         <requestFocus />
     </EditText>
     
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="ORIENTATION 方向传感器延时(ms)"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <EditText
-        android:id="@+id/edit_ori"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10" android:inputType="none">
-        <requestFocus />
-    </EditText>
-    
     <Button
         android:id="@+id/button_save"
         android:layout_width="wrap_content"
